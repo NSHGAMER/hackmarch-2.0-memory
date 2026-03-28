@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adaptive Memory</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>🧠 Adaptive Memory System</h1>
+
+<form action="/add" method="POST">
+    <input type="text" name="title" placeholder="Enter lesson..." required>
+    <button>Add</button>
+</form>
+
+<div class="cards">
+    {% for lesson in lessons %}
+    <div class="card">
+        <h3>{{ lesson.title }}</h3>
+        <p>Added: {{ lesson.created_at }}</p>
+        <p>Next: {{ lesson.next_review }}</p>
+
+        <a href="/mark/{{ lesson.id }}/remembered" class="btn good">Remembered</a>
+        <a href="/mark/{{ lesson.id }}/forgot" class="btn bad">Forgot</a>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>🔔 Notifications</h2>
+<div id="notifications"></div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/dashboard.css" />
+  </head>
+
+  <body>
+    <div class="container">
+
+      <!-- 🔝 TOP CARD -->
+      <div class="top-card">
+        <h2>Hi, {{ current_user.email }}</h2>
+        <p class="tagline">Build memory. Build habits.</p>
+
+        <h3>How may I help you? 😊</h3>
+
+        <!-- ✅ FIXED BUTTONS -->
+        <div class="options">
+          <a href="/education" class="btn">
+            <button>📘 Education</button></button>
+          </a>
+          <a href="/health" class="btn">
+            <button>💚 Health</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- 🔽 BOTTOM CARD -->
+      <div class="bottom-card">
+        <h2>Your reminders</h2>
+        <p class="tagline">Track your learning</p>
+
+        <!-- 📦 Lessons -->
+        <div class="cards">
+          {% for l in lessons %}
+          <div class="card">
+            <h3>{{ l.title }}</h3>
+            <p>{{ l.category }}</p>
+            <p>{{ l.sub_details }}</p>
+
+            <a href="/mark/{{ l.id }}/remembered" class="btn good">✔</a>
+            <a href="/mark/{{ l.id }}/forgot" class="btn bad">✖</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

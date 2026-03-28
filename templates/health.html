@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="../static/dashboard.css">
+    <link rel="stylesheet" href="../static/health.css">
+</head>
+
+<body>
+
+  <!-- ✅ MAIN CONTENT -->
+  <div class="main">
+    <h2>💚 Health</h2>
+
+    <!-- Upload -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Topic" required>
+      <input type="number" name="time" placeholder="Time (minutes)" required>
+      <input type="file" name="file" required>
+      <button>Upload & Learn</button>
+    </form>
+  </div>
+
+  <!-- BOTTOM CARD -->
+      <div class="bottom-card">
+        <h2>📊 Actions</h2>
+        <div class="tagline">Manage your progress</div>
+
+        <div class="options">
+          <button class="active">Reminder</button>
+          <button>Topic Learnt</button>
+        </div>
+      </div>
+
+      <!-- TODO CARD -->
+      <div class="bottom-card">
+        <h2>📝 To Do</h2>
+        <div class="tagline">Your tasks</div>
+
+        <div class="card">
+          <p>No tasks yet</p>
+        </div>
+      </div>
+
+  <!-- 🤖 AI SIDEBAR -->
+  <div class="ai-sidebar" id="aiSidebar">
+    <h3>🧠 AI Tutor</h3>
+
+    <div id="chatBox"></div>
+
+    <input type="text" id="userInput" placeholder="Ask anything...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <!-- 🔘 FLOAT BUTTON -->
+  <div class="ai-btn" onclick="toggleAI()">🤖 AI</div>
+
+  <!-- ✅ SCRIPT -->
+  <script>
+    function toggleAI() {
+      const sidebar = document.getElementById("aiSidebar");
+
+      if (sidebar.style.display === "none") {
+        sidebar.style.display = "block";
+      } else {
+        sidebar.style.display = "none";
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+
+      if (!message) return;
+
+      const chatBox = document.getElementById("chatBox");
+
+      chatBox.innerHTML += `<p><b>You:</b> ${message}</p>`;
+      input.value = "";
+
+      const res = await fetch("/ask_ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: message,
+          learning_id: 1   // ⚠️ TEMP (replace dynamically later)
+        })
+      });
+
+      const data = await res.json();
+
+      chatBox.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+  async function uploadFile() {
+  const fileInput = document.getElementById("fileUpload");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Choose a file first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("title", "AI Upload");
+  formData.append("time", 10);
+
+  const res = await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  if (res.redirected) {
+    window.location.href = res.url;
+    }
+  }
+  </script>
+
+</body>
+</html>

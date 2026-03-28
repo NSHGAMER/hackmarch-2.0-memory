@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AI Summarizer</title>
+    <link rel="stylesheet" href="/static/dashboard.css" />
+    <link rel="stylesheet" href="/static/learn.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>📘 {{ learning.title }}</h2>
+
+      <!-- ✅ SUMMARY -->
+      <div class="card">
+        <h3>AI Summary</h3>
+        <p>{{ learning.summary }}</p>
+      </div>
+
+      <!-- ✅ CHAT -->
+      <div class="card">
+        <h3>🧠 AI Tutor</h3>
+
+        <div id="chatBox" style="height:250px; overflow-y:auto; margin-bottom:10px; padding:10px; border:1px solid #444;"></div>
+
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Ask something..."
+          onkeypress="handleKey(event)"
+        />
+
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      const learningId = {{ learning.id }};
+
+      function handleKey(e) {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("userInput");
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        const chatBox = document.getElementById("chatBox");
+
+        // 👤 Show user message
+        chatBox.innerHTML += `<p><b>You:</b> ${message}</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        input.value = "";
+
+        // ⏳ Loading
+        chatBox.innerHTML += `<p id="loading">AI is thinking...</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const res = await fetch("/ask_ai", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              message: message,
+              learning_id: learningId
+            })
+          });
+
+          const data = await res.json();
+
+          // ❌ remove loading
+          document.getElementById("loading").remove();
+
+          // 🤖 Show AI response
+          chatBox.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+
+        } catch (error) {
+          document.getElementById("loading").remove();
+          chatBox.innerHTML += `<p style="color:red;">Error talking to AI</p>`;
+          console.error(error);
+        }
+      }
+    </script>
+  </body>
+</html>

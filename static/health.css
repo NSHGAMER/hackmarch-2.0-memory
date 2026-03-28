@@ -1,0 +1,85 @@
+/* ── Bottom Card ── */
+.bottom-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem 2.4rem;
+  position: relative;
+  width: 75%;
+}
+
+.bottom-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--accent-dim), transparent);
+}
+
+.bottom-card h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.bottom-card .tagline {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+}
+.main {
+      width: 75%;
+      padding: 20px;
+    }
+
+    /* 👉 AI SIDEBAR */
+    .ai-sidebar {
+      width: 25%;
+      height: 100vh;
+      background: #111;
+      border-left: 1px solid #333;
+      position: fixed;
+      right: 0;
+      top: 0;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .ai-sidebar h3 {
+      color: #fff;
+    }
+
+    #chatBox {
+      height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .ai-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #222;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 50px;
+      cursor: pointer;
+    }

@@ -1,0 +1,48 @@
+/* Override card hover only */
+
+.card:hover {
+  transform: none;           /* remove lift */
+  border-color: var(--accent);
+  box-shadow: none;          /* remove glow */
+}
+
+:root {
+  --bg:         #0e0e0e;
+  --surface:    #161616;
+  --surface-2:  #1c1c1c;
+  --border:     #2a2a2a;
+  --muted:      #555;
+  --text:       #e8e4dc;
+  --accent:     #c8b89a;
+  --accent-dim: #7a6e5f;
+  --good:       #6fb86f;
+  --bad:        #b05a5a;
+}
+
+/* Optional: softer interaction */
+button:hover {
+  background: var(--accent);
+}
+
+/* ── Input Style (Same as Dashboard) ── */
+input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  padding: 0.8rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.04em;
+}
+
+input::placeholder {
+  color: var(--muted);
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #c8b89a14;
+}

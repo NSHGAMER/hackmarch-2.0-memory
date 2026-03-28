@@ -1,0 +1,53 @@
+.main {
+      width: 75%;
+      padding: 20px;
+    }
+
+    /* 👉 AI SIDEBAR */
+    .ai-sidebar {
+      width: 25%;
+      height: 100vh;
+      background: #111;
+      border-left: 1px solid #333;
+      position: fixed;
+      right: 0;
+      top: 0;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .ai-sidebar h3 {
+      color: #fff;
+    }
+
+    #chatBox {
+      height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .ai-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #222;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    
