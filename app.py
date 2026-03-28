@@ -46,6 +46,10 @@ def test_email():
     send_email("your_email@gmail.com", "Test", "Working 🚀")
     return "Sent"
 
+@app.route('/verify/<token>')
+def verify(token):
+    return f"✅ Reminder acknowledged for token: {token}"
+
 # 🚀 RUN APP
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

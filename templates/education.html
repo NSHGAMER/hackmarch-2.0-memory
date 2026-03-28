@@ -193,7 +193,7 @@ let currentLearningId = null;
 
 /* 🎯 GAUGE */
 function updateGauge(score, total) {
-  const percent = (score / total) * 100;
+  const percent = total ? (score / total) * 100 : 0;
   const deg = (percent / 100) * 360;
 
   document.getElementById("gauge").style.background =
@@ -221,15 +221,17 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
 
     document.getElementById("chatBox").innerHTML =
       `<p><b>Summary:</b> ${data.summary}</p>`;
+  } else {
+    alert("Upload failed");
   }
 });
 
 /* 💬 CHAT */
 async function sendMessage() {
   const input = document.getElementById("userInput");
-  const msg = input.value;
+  const msg = input.value.trim();
 
-  if (!msg) return;
+  if (!msg || !currentLearningId) return;
 
   addMessage("user", msg);
   input.value = "";
@@ -257,18 +259,26 @@ function addMessage(role, text) {
 
 /* 📝 TODO */
 function addTodo() {
-  const val = document.getElementById("todoInput").value;
+  const input = document.getElementById("todoInput");
+  const val = input.value.trim();
+
   if (!val) return;
 
   const div = document.createElement("div");
-  div.innerText = val;
+  div.innerText = "• " + val;
 
   document.getElementById("todoList").appendChild(div);
+  input.value = "";
 }
 
 /* ⏰ REMINDER */
 async function setReminder() {
-  const min = prompt("Minutes?");
+  if (!currentLearningId) {
+    alert("Upload first!");
+    return;
+  }
+
+  const min = prompt("Enter reminder time (minutes):");
   if (!min) return;
 
   await fetch("/set_reminder", {
@@ -276,31 +286,36 @@ async function setReminder() {
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       learning_id: currentLearningId,
-      minutes: min
+      minutes: parseInt(min)
     })
   });
 
-  alert("Reminder set!");
+  alert("✅ Reminder set!");
   loadReminders();
 }
 
 /* 📥 LOAD REMINDERS */
 async function loadReminders() {
-  const res = await fetch("/get_reminders");
-  const data = await res.json();
+  try {
+    const res = await fetch("/notifications"); // 🔥 FIXED ENDPOINT
+    const data = await res.json();
 
-  const box = document.getElementById("reminderList");
-  box.innerHTML = "";
+    const box = document.getElementById("reminderList");
+    box.innerHTML = "";
 
-  data.forEach(r => {
-    const div = document.createElement("div");
-    div.className = "reminder-item";
-    div.innerText = `⏰ ${r.minutes} min reminder`;
-    box.appendChild(div);
-  });
+    data.forEach(r => {
+      const div = document.createElement("div");
+      div.className = "reminder-item";
+      div.innerText = `🔔 ${r.message}`;
+      box.appendChild(div);
+    });
+
+  } catch {
+    console.log("Reminder load failed");
+  }
 }
 
-/* 🧠 QUIZ */
+/* 🧠 QUIZ START */
 async function startQuiz() {
   if (!currentLearningId) {
     alert("Upload first!");
@@ -316,7 +331,57 @@ async function startQuiz() {
   });
 
   const data = await res.json();
-  document.getElementById("quizBox").innerText = data.quiz;
+
+  const quizBox = document.getElementById("quizBox");
+  quizBox.innerHTML = ""; // 🔥 clear old
+
+  data.quiz.forEach((q, index) => {
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      <p><b>${index + 1}. ${q.question}</b></p>
+      ${q.options.map(opt => `
+        <label>
+          <input type="radio" name="q${index}" value="${opt}">
+          ${opt}
+        </label><br>
+      `).join("")}
+      <hr>
+    `;
+
+    quizBox.appendChild(div);
+  });
+
+  // ✅ ADD SUBMIT BUTTON
+  const btn = document.createElement("button");
+  btn.innerText = "Submit Quiz";
+  btn.onclick = submitQuiz;
+
+  quizBox.appendChild(btn);
+}
+
+/* 📊 SUBMIT QUIZ */
+async function submitQuiz() {
+  let answers = [];
+
+  document.querySelectorAll("input[type='radio']:checked").forEach(el => {
+    answers.push(el.value);
+  });
+
+  const res = await fetch("/submit_quiz", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      answers: answers,
+      learning_id: currentLearningId
+    })
+  });
+
+  const data = await res.json();
+
+  alert(`Score: ${data.score}/${data.total}`);
+
+  updateGauge(data.score, data.total);
 }
 
 /* INIT */
@@ -324,6 +389,5 @@ updateGauge(7, 10);
 loadReminders();
 
 </script>
-
 </body>
 </html>
