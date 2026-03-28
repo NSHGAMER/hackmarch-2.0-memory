@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #0f0f0f;
+  background: #0b0b0b;
   color: white;
 }
 
@@ -14,104 +14,183 @@ body {
   height: 100vh;
 }
 
-/* LEFT SIDEBAR */
+/* SIDEBAR */
 .sidebar {
   width: 250px;
-  background: #111;
-  padding: 15px;
-  overflow-y: auto;
+  background: #0f0f0f;
+  padding: 20px;
+  border-right: 1px solid #222;
 }
 
-/* CENTER GRID */
+.sidebar input {
+  width: 100%;
+  padding: 10px;
+  background: #1a1a1a;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+/* CHAT ITEM */
+.chat-item {
+  background: #1a1a1a;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.chat-item:hover {
+  background: #00ffcc22;
+}
+
+/* DASHBOARD */
 .dashboard {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: minmax(200px, auto);
-  gap: 15px;
-  padding: 20px;
-}
-
-/* RIGHT AI */
-.ai-panel {
-  width: 320px;
-  background: #111;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
+  gap: 20px;
+  padding: 25px;
 }
 
 /* CARD */
 .card {
-  background: rgba(255,255,255,0.05);
-  padding: 15px;
-  border-radius: 10px;
+  background: #121212;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
 }
 
 /* GAUGE */
 .gauge {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  background: conic-gradient(lime 0deg, #222 0deg);
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: auto;
 }
 
 .gauge-inner {
-  width: 110px;
-  height: 110px;
-  background: #0f0f0f;
+  width: 120px;
+  height: 120px;
+  background: #0b0b0b;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 22px;
 }
 
-/* CHAT */
+/* BUTTONS */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+.quiz-btn {
+  background: linear-gradient(45deg, orange, #ffcc00);
+  color: black;
+}
+
+.submit-btn {
+  background: lime;
+  color: black;
+}
+
+.close-btn {
+  background: red;
+}
+
+/* INPUTS */
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: #1a1a1a;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+/* AI PANEL */
+.ai-panel {
+  width: 320px;
+  background: #0f0f0f;
+  padding: 20px;
+  border-left: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-panel input[type="text"],
+.ai-panel input[type="number"]{
+  background: #000;
+}
+
 #chatBox {
   flex: 1;
   overflow-y: auto;
   margin: 10px 0;
 }
 
+/* MESSAGES */
 .message {
-  padding: 8px;
+  padding: 10px;
   margin: 5px 0;
   border-radius: 6px;
 }
 
-.user { background: #00aaff33; }
-.ai { background: #00ffcc33; }
-
-/* INPUT */
-input, button {
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
-  border: none;
+.user {
+  background: #00aaff33;
 }
 
-button {
-  background: #00ffcc;
-  cursor: pointer;
+.ai {
+  background: #00ffcc33;
 }
 
-.quiz-btn {
-  margin-top: 10px;
-  background: orange;
-}
-
-/* reminder list */
+/* REMINDERS */
 .reminder-item {
-  background: #222;
+  background: #1a1a1a;
   padding: 8px;
   margin-top: 5px;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 6px;
+}
+
+/* QUIZ MODAL */
+.quiz-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-box {
+  background: #121212;
+  padding: 25px;
+  width: 60%;
+  max-height: 80%;
+  overflow-y: auto;
+  border-radius: 10px;
 }
 </style>
 </head>
@@ -120,17 +199,16 @@ button {
 
 <div class="app">
 
-  <!-- 🧠 CHAT SIDEBAR -->
+  <!-- LEFT -->
   <div class="sidebar">
     <h3>Chats</h3>
     <input placeholder="Search...">
     <div id="chatList"></div>
   </div>
 
-  <!-- 📊 DASHBOARD -->
+  <!-- CENTER -->
   <div class="dashboard">
 
-    <!-- 🎯 SCORE + QUIZ -->
     <div class="card">
       <h3>Quiz Score</h3>
 
@@ -139,59 +217,62 @@ button {
       </div>
 
       <button class="quiz-btn" onclick="startQuiz()">Take Quiz</button>
-
-      <div id="quizBox"></div>
     </div>
 
-    <!-- 🏆 RANKING -->
     <div class="card">
       <h3>Ranking</h3>
       <p>1. You - 80 pts</p>
-      <p>2. Alex - 60 pts</p>
+      <p>2. D.K - 60 pts</p>
     </div>
 
-    <!-- ⏰ REMINDER -->
     <div class="card">
       <h3>Reminder</h3>
       <button onclick="setReminder()">Set Reminder</button>
-
       <div id="reminderList"></div>
     </div>
 
-    <!-- 📝 TODO -->
     <div class="card">
       <h3>To-Do</h3>
-      <input id="todoInput" placeholder="Task">
+      <input id="todoInput">
       <button onclick="addTodo()">Add</button>
       <div id="todoList"></div>
     </div>
 
   </div>
 
-  <!-- 🤖 AI PANEL -->
+  <!-- RIGHT -->
   <div class="ai-panel">
     <h3>AI Tutor</h3>
 
     <form id="uploadForm">
-      <input type="text" name="title" placeholder="Topic" required>
-      <input type="number" name="time" placeholder="Time" required>
+      <input type="text"name="title" placeholder="Topic" required>
+      <input type="number" name="time" placeholder="Time (minutes)" required>
       <input type="file" name="file" required>
       <button>Upload</button>
     </form>
 
     <div id="chatBox"></div>
 
-    <input id="userInput" placeholder="Ask anything...">
+    <input id="userInput">
     <button onclick="sendMessage()">Send</button>
   </div>
 
+</div>
+
+<!-- QUIZ MODAL -->
+<div id="quizModal" class="quiz-modal">
+  <div class="quiz-box">
+    <div id="quizBox"></div>
+    <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+    <button class="close-btn" onclick="closeQuiz()">Close</button>
+  </div>
 </div>
 
 <script>
 
 let currentLearningId = null;
 
-/* 🎯 GAUGE */
+/* GAUGE */
 function updateGauge(score, total) {
   const percent = total ? (score / total) * 100 : 0;
   const deg = (percent / 100) * 360;
@@ -203,146 +284,27 @@ function updateGauge(score, total) {
     Math.round(percent) + "%";
 }
 
-/* 📄 UPLOAD */
-document.getElementById("uploadForm").addEventListener("submit", async function(e){
-  e.preventDefault();
-
-  const formData = new FormData(this);
-
-  const res = await fetch("/upload", {
-    method: "POST",
-    body: formData
-  });
-
-  const data = await res.json();
-
-  if (data.success) {
-    currentLearningId = data.learning_id;
-
-    document.getElementById("chatBox").innerHTML =
-      `<p><b>Summary:</b> ${data.summary}</p>`;
-  } else {
-    alert("Upload failed");
-  }
-});
-
-/* 💬 CHAT */
-async function sendMessage() {
-  const input = document.getElementById("userInput");
-  const msg = input.value.trim();
-
-  if (!msg || !currentLearningId) return;
-
-  addMessage("user", msg);
-  input.value = "";
-
-  const res = await fetch("/ask_ai", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      message: msg,
-      learning_id: currentLearningId
-    })
-  });
-
-  const data = await res.json();
-  addMessage("ai", data.reply);
-}
-
-function addMessage(role, text) {
-  const div = document.createElement("div");
-  div.className = "message " + role;
-  div.innerText = text;
-
-  document.getElementById("chatBox").appendChild(div);
-}
-
-/* 📝 TODO */
-function addTodo() {
-  const input = document.getElementById("todoInput");
-  const val = input.value.trim();
-
-  if (!val) return;
-
-  const div = document.createElement("div");
-  div.innerText = "• " + val;
-
-  document.getElementById("todoList").appendChild(div);
-  input.value = "";
-}
-
-/* ⏰ REMINDER */
-async function setReminder() {
-  if (!currentLearningId) {
-    alert("Upload first!");
-    return;
-  }
-
-  const min = prompt("Enter reminder time (minutes):");
-  if (!min) return;
-
-  await fetch("/set_reminder", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      learning_id: currentLearningId,
-      minutes: parseInt(min)
-    })
-  });
-
-  alert("✅ Reminder set!");
-  loadReminders();
-}
-
-/* 📥 LOAD REMINDERS */
-async function loadReminders() {
-  try {
-    const res = await fetch("/notifications"); // 🔥 FIXED ENDPOINT
-    const data = await res.json();
-
-    const box = document.getElementById("reminderList");
-    box.innerHTML = "";
-
-    data.forEach(r => {
-      const div = document.createElement("div");
-      div.className = "reminder-item";
-      div.innerText = `🔔 ${r.message}`;
-      box.appendChild(div);
-    });
-
-  } catch {
-    console.log("Reminder load failed");
-  }
-}
-
-/* 🧠 QUIZ START */
+/* QUIZ */
 async function startQuiz() {
-  if (!currentLearningId) {
-    alert("Upload first!");
-    return;
-  }
-
   const res = await fetch("/generate_quiz", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      learning_id: currentLearningId
-    })
+    body: JSON.stringify({ learning_id: currentLearningId })
   });
 
   const data = await res.json();
 
   const quizBox = document.getElementById("quizBox");
-  quizBox.innerHTML = ""; // 🔥 clear old
+  quizBox.innerHTML = "";
 
-  data.quiz.forEach((q, index) => {
+  data.quiz.forEach((q, i) => {
     const div = document.createElement("div");
 
     div.innerHTML = `
-      <p><b>${index + 1}. ${q.question}</b></p>
+      <p>${i+1}. ${q.question}</p>
       ${q.options.map(opt => `
         <label>
-          <input type="radio" name="q${index}" value="${opt}">
+          <input type="radio" name="q${i}" value="${opt}">
           ${opt}
         </label><br>
       `).join("")}
@@ -352,15 +314,14 @@ async function startQuiz() {
     quizBox.appendChild(div);
   });
 
-  // ✅ ADD SUBMIT BUTTON
-  const btn = document.createElement("button");
-  btn.innerText = "Submit Quiz";
-  btn.onclick = submitQuiz;
-
-  quizBox.appendChild(btn);
+  document.getElementById("quizModal").style.display = "flex";
 }
 
-/* 📊 SUBMIT QUIZ */
+function closeQuiz() {
+  document.getElementById("quizModal").style.display = "none";
+}
+
+/* SUBMIT */
 async function submitQuiz() {
   let answers = [];
 
@@ -371,21 +332,32 @@ async function submitQuiz() {
   const res = await fetch("/submit_quiz", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      answers: answers,
-      learning_id: currentLearningId
-    })
+    body: JSON.stringify({ answers, learning_id: currentLearningId })
   });
 
   const data = await res.json();
 
   alert(`Score: ${data.score}/${data.total}`);
-
   updateGauge(data.score, data.total);
 }
 
+/* REMINDERS */
+async function loadReminders() {
+  const res = await fetch("/notifications");
+  const data = await res.json();
+
+  const box = document.getElementById("reminderList");
+  box.innerHTML = "";
+
+  data.forEach(r => {
+    const div = document.createElement("div");
+    div.innerText = r.message;
+    box.appendChild(div);
+  });
+}
+
 /* INIT */
-updateGauge(7, 10);
+updateGauge(7,10);
 loadReminders();
 
 </script>
