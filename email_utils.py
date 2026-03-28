@@ -3,8 +3,8 @@ from email.mime.text import MIMEText
 import os
 
 def send_email(to_email, subject, body):
-    sender = os.getenv("EMAIL_USER")
-    password = os.getenv("EMAIL_PASS")  # Gmail App Password
+    sender = "devssicm69@gmail.com"
+    password = "obutsjuxobkbwytt"  # Gmail App Password
 
     if not sender or not password:
         print("❌ Email config missing")
